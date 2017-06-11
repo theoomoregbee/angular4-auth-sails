@@ -15,7 +15,8 @@ module.exports = {
       required: true
     },
     roles: {
-      type: 'array'
+      type: 'array',
+      defaultsTo: ["DEFAULT_USER"]
     },
     email: {
       type: 'string',
