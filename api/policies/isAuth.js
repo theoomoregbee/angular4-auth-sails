@@ -31,6 +31,10 @@ module.exports = function (req, res, next) {
 
         if (!user) return res.serverError("User not found");
 
+        //check if the date the token was generated is greater than with the last login
+        if (new Date(decoded.token_gen_date) < new Date(user.lastlogout))
+          return res.forbidden("Please login again, token is not valid");
+
         req.user = user;
         next();
       });

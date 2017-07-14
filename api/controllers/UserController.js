@@ -42,7 +42,7 @@ module.exports = {
         if (!matched) return res.serverError("Invalid password.");
 
         //save the date the token was generated for already inside toJSON()
-
+        user.token_gen_date = new Date();//save the date the token was generated for
         var token = jwt.sign(user.toJSON(), "this is my secret key", {
           expiresIn: '10m'
         });
@@ -51,6 +51,23 @@ module.exports = {
         res.ok(token);
       });
 
+    });
+  },
+
+  /**
+   * this is used to logout and update the last login of the user which is currently logged in
+   * GET /logout
+   * @param req
+   * @param res
+   */
+  logout: function (req, res) {
+    if (!req.user)
+      return res.serverError("No user specified");
+
+    User.update(req.user.id, {lastlogout: new Date()}).exec(function callback(err, updated) {
+      if (err) return res.serverError(err);
+
+      return res.ok("Logged out successfully");
     });
   },
 
@@ -66,6 +83,7 @@ module.exports = {
       if (error) return res.serverError(error);
       if (!user) return res.serverError("User not found");
 
+      user.token_gen_date = new Date();//save the date the token was generated for
       var token = jwt.sign(user.toJSON(), "this is my secret key", {
         expiresIn: '10m'
       });
