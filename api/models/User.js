@@ -28,6 +28,9 @@ module.exports = {
       type: 'string',
       required: true
     },
+    lastlogout: {
+      type: 'date'
+    },
 
     //attributes methods
     toJSON: function () {
